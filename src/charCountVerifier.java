@@ -2,8 +2,8 @@
  * My first GUI program in Java using Swing.
  * This simple program prompts you for a name of a 
  * file that must exist in the same location as the
- * program and them shows the lines which are over 
- * MAX_LINE_LENGTH.
+ * program and a character limit and then shows the 
+ * lines which are over said limit.
  * 
  * I created this program before I started using Eclipse
  * so I could check my classes for crazy long lines.
@@ -19,32 +19,32 @@ import javax.swing.*;
  * @author Karan Goel
  * 
  */
-public class over100 implements ActionListener {
-
-	private static final int MAX_LINE_LENGTH = 100;
+public class charCountVerifier implements ActionListener {
 	
 	public static void main(String[] args) {
-		new over100();
+		new charCountVerifier();
 	}
 	
 	private JFrame frame;
 	private JPanel north;
 	private JTextArea result;
 	private JButton run;
-	private JTextField inputFile;
+	private JTextField inputFile, charLimit;
 	
-	public over100() {
+	public charCountVerifier() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(new Dimension(550, 400));
+		frame.setSize(new Dimension(600, 300));
 		frame.setLocation(new Point(400, 300));
-		frame.setTitle(MAX_LINE_LENGTH + " Character Count Verifier v1 - Karan Goel");
+		frame.setTitle("Character Count Verifier - Karan Goel");
 		frame.setLayout(new BorderLayout());
 		
-		north = new JPanel(new GridLayout(1, 2));
+		north = new JPanel(new GridLayout(1, 3));
 		
-		inputFile = new JTextField();
+		inputFile = new JTextField("File name with extension");
 		north.add(inputFile);
+		charLimit = new JTextField("Character limit per line");
+		north.add(charLimit);
 		run = new JButton("Run..");
 		north.add(run);
 		
@@ -61,6 +61,7 @@ public class over100 implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		try {
+			int limit = Integer.parseInt(charLimit.getText());
 			String fileName = inputFile.getText();
 			int i = 1;
 			boolean flag = false;
@@ -68,15 +69,15 @@ public class over100 implements ActionListener {
 			result.setText("");
 			while(scan.hasNextLine()) {
 				String line = scan.nextLine();
-				if(line.length() > MAX_LINE_LENGTH) {
+				if(line.length() > limit) {
 					flag = true;
-					result.append("Line #" + i + ": " + line + " over by " + 
-							(line.length() - MAX_LINE_LENGTH) + " characters\n");
+					result.append("Line #" + i + ": " + line + " - over by " + 
+							(line.length() - limit) + " characters\n");
 				}
 				i++;
 			}
 			if(!flag) {
-				result.setText("No line exceeds " + MAX_LINE_LENGTH + " characters.");
+				result.setText("No line exceeds " + limit + " characters.");
 			}
 			scan.close();
 		} catch (FileNotFoundException ex) {
